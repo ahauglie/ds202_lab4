@@ -84,17 +84,21 @@ defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
 library(ggplot2)
 ggplot(data = defClean, aes(x = Score,)) + geom_histogram(binwidth = .5, color="black", fill = "red") + facet_wrap(~Statistic) + ylab("Count of Players in each Score") + xlab("Score") + ggtitle("Histogram of Defensive Statistics")
 ```
-The graph shows that turnovers and sacks are rare in defensicve stats. This would make sense as this is primarily an offensive thing.  
+The graph shows that turnovers and sacks are rare in defensive stats. This would make sense as this is primarily an offensive thing.  
 
 
 3. Did ISU have better defense against West Virginia or Kansas State? Answer this question by creating a scatterplot with x-axis being the number of solo tackles (by each player) against West Virginia, and y-axis being that against Kansas State. A large number of solo tackles indicates good defense.
 
 ```{r}
-defClean3 <- defClean %>% select(Name, Opponent_Opponent, Statistic) %>% spread(Opponent_Opponent,Tackles_Solo)
+defClean3 <- defense %>%
+  select(Name, Opponent_Opponent, Tackles_Solo) %>%
+  spread(Opponent_Opponent, Tackles_Solo)
+
 defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
 
-ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point(Na.rm = TRUE) + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
 ```
+Kansas state did better in this game than Iowa State. 
 
 
 **Part Two: Tidying (2)**

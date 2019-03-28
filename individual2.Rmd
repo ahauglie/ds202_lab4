@@ -6,10 +6,6 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(tidyr)
 library(tidyverse)
@@ -91,10 +87,50 @@ This Graph shows that any type of Turnover is a rare statistic to see. You can a
 
 3. Did ISU have better defense against West Virginia or Kansas State? Answer this question by creating a scatterplot with x-axis being the number of solo tackles (by each player) against West Virginia, and y-axis being that against Kansas State. A large number of solo tackles indicates good defense.
 ```{r}
-defClean2 <- defClean[defClean$Statistic == "Tackles_Solo",]
-ggplot(data = defClean2, aes(x = Statistic, y= )) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+defClean3 <- defClean %>%
+  select(Name, Opponent_Opponent, Tackles_Solo) %>%
+  spread(Opponent_Opponent, Tackles_Solo)
+defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
+
+ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+```
+**Part Two: Tidying (2)**
+
+1. Separate the Hometown column into two columns, namely the city and the state. Print the first few rows of these two columns.
+
+```{r}
+bioClean <- bioClean %>% separate(Hometown, c("City", "State"), ",")
+head(bioClean)
+```
+
+2. How many players are there from each state?
+
+```{r}
+bioCleanstat<- bioClean %>% group_by(State) %>% summarize(n=n())
+View(bioCleanstat)
+#I don't know if this is right but it looks like something at least lmao
+```
+
+**Part Three: Joining Data Frames**
+
+1. Find where do the offensive players come from by joining the offensive data and player biography data appropriately.
+
+```{r}
 
 ```
+
+2. Is there a relationship between the weight of a player and the receiving yards (Receiving_YDS)?
+
+```{r}
+
+```
+
+3. Explore more. Raise a question that can be answered only by looking at two or more data frames. Then answer that question.
+
+```{r}
+
+```
+
 
 
 

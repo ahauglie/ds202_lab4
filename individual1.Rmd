@@ -76,10 +76,25 @@ str(bioClean)
 
 ```{r}
 defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
-View(defClean)
 ```
 
-2. 
+2. Create a histogram for each defensive statistic. Use facet_wrap to draw all histograms in a single plot. What defensive skills are rare?
+
+```{r}
+library(ggplot2)
+ggplot(data = defClean, aes(x = Score,)) + geom_histogram(binwidth = .5, color="black", fill = "red") + facet_wrap(~Statistic) + ylab("Count of Players in each Score") + xlab("Score") + ggtitle("Histogram of Defensive Statistics")
+```
+The graph shows that turnovers and sacks are rare in defensicve stats. This would make sense as this is primarily an offensive thing.  
+
+
+3. Did ISU have better defense against West Virginia or Kansas State? Answer this question by creating a scatterplot with x-axis being the number of solo tackles (by each player) against West Virginia, and y-axis being that against Kansas State. A large number of solo tackles indicates good defense.
+
+```{r}
+defClean3 <- defClean %>% select(Name, Opponent_Opponent, Statistic) %>% spread(Opponent_Opponent,Tackles_Solo)
+defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
+
+ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+```
 
 
 **Part Two: Tidying (2)**
@@ -95,8 +110,6 @@ head(bioClean)
 
 ```{r}
 bioCleanstat<- bioClean %>% group_by(State) %>% summarize(n=n())
-View(bioCleanstat)
-#I don't know if this is right but it looks like something at least lmao
 ```
 
 **Part Three: Joining Data Frames**
@@ -104,18 +117,24 @@ View(bioCleanstat)
 1. Find where do the offensive players come from by joining the offensive data and player biography data appropriately.
 
 ```{r}
-
+origin <- offClean %>% inner_join(bioClean, by='Name')
 ```
 
 2. Is there a relationship between the weight of a player and the receiving yards (Receiving_YDS)?
 
 ```{r}
-
+ggplot(data = origin, aes(x = Weight, y= Receiving_YDS, color = Name)) + geom_point() + ylab("Receiving Yards") + xlab("Weight") + ggtitle("Receiving Yards v.s Player Weight")
 ```
+There is a slight negative relationship between the weight of a player and the recieving yards, meaning that the less a player weighs, the more yards they're likely to have received. 
 
 3. Explore more. Raise a question that can be answered only by looking at two or more data frames. Then answer that question.
 
-```{r}
+Question: What positions tend to have taller and shorter players?
 
+```{r}
+playerheight <- defClean %>% inner_join(bioClean, by='Name')
+ggplot(data = playerheight, aes(x = Height_in_inches)) + geom_histogram( fill = "yellow", color = "black") + facet_wrap(~Position) + ggtitle("Height by Position") + xlab("Height (in inches)") +ylab("number of players")
 ```
+
+This graph shows that the tallest players are typically Defensive Ends, and the shortest players tend to be running backs, which would make sense as typically the smaller players are faster and would be suited for the running back position. 
 

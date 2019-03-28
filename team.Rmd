@@ -50,3 +50,33 @@ biography <- mutate_at(biography, vars("Weight"), as.numeric)
 str(biography)
 ```
 
+3. Bonus: Change the Height column in biogrpahy into numeric. (Hint: Use a unit that works well)
+```{r}
+biography <- biography %>% separate(Height, c("Feet", "Inches"), "-")
+biography$Feet <- as.numeric(biography$Feet)
+biography$Inches <- as.numeric(biography$Inches)
+biography <- biography %>% mutate(Height_in_inches = (Feet*12)+Inches)
+biography <- subset(biography, select = -c(Feet, Inches))
+str(biography)
+```
+
+```{r}
+defClean <- defense
+offClean <- offense
+bioClean <- biography
+
+str(defClean)
+str(offClean)
+str(bioClean)
+```
+
+
+**Part Two: Tidying (1)**
+
+1. Reformat the defClean data frame into a tidy format using gather. The type of statistic (Tackles_Solo, Tackles_ASST, etc) is added as a new key column named Statistic.
+
+```{r}
+defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
+```
+
+

@@ -124,5 +124,14 @@ origin <- offClean %>% inner_join(bioClean, by='Name')
 ```{r}
 ggplot(data = origin, aes(x = Weight, y= Receiving_YDS, color = Name)) + geom_point() + ylab("Receiving Yards") + xlab("Weight") + ggtitle("Receiving Yards v.s Player Weight")
 ```
-There is a slight negative relationship between the weight of a player and the recieving yards, meaning that the less a player weighs, the more yards they're likely to have received. 
+There is a slight negative relationship between the weight of a player and the recieving yards, meaning that the less a player weighs, the more yards they're likely to have received.
 
+
+3. Explore more. Raise a question that can be answered only by looking at two or more data frames. Then answer that question.
+    Our Question: Which postition has the most Solo tackles during the season?
+```{r}
+New1 <- defClean %>% inner_join(bioClean, by='Name')
+New2 <- New1[New1$Statistic == "Tackles_Solo",]
+ggplot(data = New2, aes(x = Position )) + geom_bar( fill = "darkred", color = "black") + coord_flip() 
+```
+We can see that the Defensive back position has the most tackles by far, and that defensive end and Lineback are 2nd and 3rd in Solo Tackles. The data may be a bit skewed for the tackles for the Defensive back position because our best player on defense was Brian Peavy, and he was a defensive back. 

@@ -96,6 +96,7 @@ defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
 
 ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point(Na.rm = TRUE) + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia") + geom_jitter(Na.rm = TRUE)
 ```
+What we can see is that the defense from Kansas is was better and we had more solo tackles during that game.
 **Part Two: Tidying (2)**
 
 1. Separate the Hometown column into two columns, namely the city and the state. Print the first few rows of these two columns.

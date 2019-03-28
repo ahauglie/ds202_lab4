@@ -7,24 +7,73 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(tidyr)
 ```
 
-## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+library(readxl)
+defense <- read_excel('cyclonesFootball2018.xlsx', sheet='Defensive')
+str(defense)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+offense <- read_excel('cyclonesFootball2018.xlsx', sheet='Offensive')
+str(offense)
 
-```{r cars}
-summary(cars)
+biography <- read_excel('cyclonesFootball2018.xlsx',sheet='Biography')
+str(biography)
 ```
 
-## Including Plots
+**Part One: Cleaning Data**
 
-You can also embed plots, for example:
+1. Player names and opponent names are factors.
+```{r}
+defense$Name <- as.factor(defense$Name)
+defense$Opponent_Opponent <- as.factor(defense$Opponent_Opponent)
+str(defense)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+offense$Name <- as.factor(offense$Name)
+offense$Opponent_Opponent <- as.factor(offense$Opponent_Opponent)
+str(offense)
+
+biography$Name <- as.factor(biography$Name)
+str(biography)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+2. All offensive and defensive statistics are numerical. The Weight column in biogrpahy is also numeric.
+
+```{r}
+defense <- mutate_at(defense, vars(3:11), as.numeric)
+str(defense)
+offense <- mutate_at(offense, vars(3:12), as.numeric)
+str(offense)
+biography <- mutate_at(biography, vars("Weight"), as.numeric)
+str(biography)
+```
+
+3. Bonus: Change the Height column in biogrpahy into numeric. (Hint: Use a unit that works well)
+```{r}
+biography <- biography %>% separate(Height, c("Feet", "Inches"), "-")
+biography$Feet <- as.numeric(biography$Feet)
+biography$Inches <- as.numeric(biography$Inches)
+biography <- biography %>% mutate(Height_in_inches = (Feet*12)+Inches)
+biography <- subset(biography, select = -c(Feet, Inches))
+str(biography)
+```
+```{r}
+defClean <- defense
+offClean <- offense
+bioClean <- biography
+
+str(defClean)
+str(offClean)
+str(bioClean)
+```
+
+**Part Two: Tidying (1)**
+
+1. Reformat the defClean data frame into a tidy format using gather. The type of statistic (Tackles_Solo, Tackles_ASST, etc) is added as a new key column named Statistic.
+
+```{r}
+
+```

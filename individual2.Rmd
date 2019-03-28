@@ -76,7 +76,7 @@ str(bioClean)
 
 ```{r}
 defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
-View(defClean)
+
 ```
 2. Create a histogram for each defensive statistic. Use facet_wrap to draw all histograms in a single plot. What defensive skills are rare?
 ```{r}
@@ -87,12 +87,12 @@ This Graph shows that any type of Turnover is a rare statistic to see. You can a
 
 3. Did ISU have better defense against West Virginia or Kansas State? Answer this question by creating a scatterplot with x-axis being the number of solo tackles (by each player) against West Virginia, and y-axis being that against Kansas State. A large number of solo tackles indicates good defense.
 ```{r}
-defClean3 <- defClean %>%
-  select(Name, Opponent_Opponent, Tackles_Solo) %>%
-  spread(Opponent_Opponent, Tackles_Solo)
-defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
+#defClean3 <- defClean %>%
+ # select(Name, Opponent_Opponent, Statistic) %>%
+  #spread(Opponent_Opponent, Tackles_Solo)
+#defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
 
-ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+#ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
 ```
 **Part Two: Tidying (2)**
 
@@ -107,8 +107,7 @@ head(bioClean)
 
 ```{r}
 bioCleanstat<- bioClean %>% group_by(State) %>% summarize(n=n())
-View(bioCleanstat)
-#I don't know if this is right but it looks like something at least lmao
+
 ```
 
 **Part Three: Joining Data Frames**
@@ -116,20 +115,31 @@ View(bioCleanstat)
 1. Find where do the offensive players come from by joining the offensive data and player biography data appropriately.
 
 ```{r}
-
+Origin <- offClean %>% inner_join(bioClean, by='Name')
 ```
 
 2. Is there a relationship between the weight of a player and the receiving yards (Receiving_YDS)?
 
 ```{r}
-
+ggplot(data = Origin, aes(x = Weight, y= Receiving_YDS, color = Name)) + geom_point() + ylab("Receiving Yards") + xlab("Weight") + ggtitle("Receiving Yards v.s Player Weight")
 ```
+Hakeem Butler, show as the outlier in the group with most of the recieving yards, was our best wide reciever. This means he will get a large majority of the passes. If you remove him from the graph and look at the rest of the players, there is a slight negative relationship between Receiving Yards and Weight. Meaning that generally the less one of our offensive player weighs the more likely he has more yards. 
+
 
 3. Explore more. Raise a question that can be answered only by looking at two or more data frames. Then answer that question.
-
+    Our Question: Which postition has the most Solo tackles during the season?
 ```{r}
+New1 <- defClean %>% inner_join(bioClean, by='Name')
+New2 <- New1[New1$Statistic == "Tackles_Solo",]
+ggplot(data = New2, aes(x = Position )) + geom_bar( fill = "darkred", color = "black") + coord_flip() 
+
+
+ggplot(data = New1, aes(x = Weight)) + geom_histogram( fill = "darkred", color = "black") + facet_wrap(~Position)
+ggplot(data = New1, aes(x = Height_in_inches)) + geom_histogram( fill = "darkred", color = "black") + facet_wrap(~Position)
+
 
 ```
+We can see that the Defensive back position has the most tackles by far, and that defensive end and Lineback are 2nd and 3rd in Solo Tackles. The data may be a bit skewed for the tackles for the Defensive back position because our best player on defense was Brian Peavy, and he was a defensive back. 
 
 
 

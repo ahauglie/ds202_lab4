@@ -111,4 +111,18 @@ bioCleanstat<- bioClean %>% group_by(State) %>% summarize(n=n())
 
 ```
 
+**Part Three: Joining Data Frames**
+
+1. Find where do the offensive players come from by joining the offensive data and player biography data appropriately.
+
+```{r}
+origin <- offClean %>% inner_join(bioClean, by='Name')
+```
+
+2. Is there a relationship between the weight of a player and the receiving yards (Receiving_YDS)?
+
+```{r}
+ggplot(data = origin, aes(x = Weight, y= Receiving_YDS, color = Name)) + geom_point() + ylab("Receiving Yards") + xlab("Weight") + ggtitle("Receiving Yards v.s Player Weight")
+```
+There is a slight negative relationship between the weight of a player and the recieving yards, meaning that the less a player weighs, the more yards they're likely to have received. 
 

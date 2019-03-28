@@ -75,5 +75,8 @@ str(bioClean)
 1. Reformat the defClean data frame into a tidy format using gather. The type of statistic (Tackles_Solo, Tackles_ASST, etc) is added as a new key column named Statistic.
 
 ```{r}
-
+defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
+View(defClean)
 ```
+
+2. 

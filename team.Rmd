@@ -79,4 +79,36 @@ str(bioClean)
 defClean <- defClean %>% gather(key= Statistic, value="Score",3:11)
 ```
 
+2. Create a histogram for each defensive statistic. Use facet_wrap to draw all histograms in a single plot. What defensive skills are rare?
+```{r}
+ggplot(data = defClean, aes(x = Score,)) + geom_histogram(binwidth = .5, color="black", fill = "red") + facet_wrap(~Statistic) + ylab("Count of Players in each Score") + xlab("Score") + ggtitle("Histogram of Defensive Statistics")
+```
+This Graph shows that any type of Turnover is a rare statistic to see. You can also see that Sacks are a rare statistic. Both of these observations make sense with my understanding of football. 
+
+
+3. Did ISU have better defense against West Virginia or Kansas State? Answer this question by creating a scatterplot with x-axis being the number of solo tackles (by each player) against West Virginia, and y-axis being that against Kansas State. A large number of solo tackles indicates good defense.
+```{r}
+defClean3 <- defClean %>%
+  select(Name, Opponent_Opponent, Tackles_Solo) %>%
+  spread(Opponent_Opponent, Tackles_Solo)
+defClean3 <- defClean3[, c("Kansas State", "West Virginia")]
+
+ggplot(data = defClean3, aes(x = `Kansas State`, y= `West Virginia`)) + geom_point() + ylab("Solo Tackles by player against Kansas State") + xlab("Solo Tackles by player against West Virginia") + ggtitle("Comparing ISU's defense against Kansas State and West Virginia")
+```
+**Part Two: Tidying (2)**
+
+1. Separate the Hometown column into two columns, namely the city and the state. Print the first few rows of these two columns.
+
+```{r}
+bioClean <- bioClean %>% separate(Hometown, c("City", "State"), ",")
+head(bioClean)
+```
+
+2. How many players are there from each state?
+
+```{r}
+bioCleanstat<- bioClean %>% group_by(State) %>% summarize(n=n())
+
+```
+
 

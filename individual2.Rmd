@@ -132,14 +132,14 @@ Hakeem Butler, show as the outlier in the group with most of the recieving yards
 New1 <- defClean %>% inner_join(bioClean, by='Name')
 New2 <- New1[New1$Statistic == "Tackles_Solo",]
 ggplot(data = New2, aes(x = Position )) + geom_bar( fill = "darkred", color = "black") + coord_flip() 
-
-
-ggplot(data = New1, aes(x = Weight)) + geom_histogram( fill = "darkred", color = "black") + facet_wrap(~Position)
-ggplot(data = New1, aes(x = Height_in_inches)) + geom_histogram( fill = "darkred", color = "black") + facet_wrap(~Position)
-
-
 ```
 We can see that the Defensive back position has the most tackles by far, and that defensive end and Lineback are 2nd and 3rd in Solo Tackles. The data may be a bit skewed for the tackles for the Defensive back position because our best player on defense was Brian Peavy, and he was a defensive back. 
+
+Bonus Question: What defensive positions are generally heavier in weight, and which are lower in weight?
+```{r}
+ggplot(data = New1, aes(x = Weight)) + geom_histogram( fill = "darkred", color = "black") + facet_wrap(~Position)
+```
+Defensive back and Wide Reveivers are shown as low weights and the Defensive Line and Defensive End are on the heavier side. You can clearly see that the Defensive line are the heaviest players, and this makes sense as they rush the quarterback each play. 
 
 
 

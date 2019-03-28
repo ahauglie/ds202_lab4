@@ -9,11 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
 library(tidyr)
+library(readxl)
 ```
 
-
 ```{r}
-library(readxl)
 defense <- read_excel('cyclonesFootball2018.xlsx', sheet='Defensive')
 str(defense)
 
@@ -23,3 +22,31 @@ str(offense)
 biography <- read_excel('cyclonesFootball2018.xlsx',sheet='Biography')
 str(biography)
 ```
+
+**Part One: Cleaning Data**
+
+1. Player names and opponent names are factors.
+```{r}
+defense$Name <- as.factor(defense$Name)
+defense$Opponent_Opponent <- as.factor(defense$Opponent_Opponent)
+str(defense)
+
+offense$Name <- as.factor(offense$Name)
+offense$Opponent_Opponent <- as.factor(offense$Opponent_Opponent)
+str(offense)
+
+biography$Name <- as.factor(biography$Name)
+str(biography)
+```
+
+2. All offensive and defensive statistics are numerical. The Weight column in biogrpahy is also numeric.
+
+```{r}
+defense <- mutate_at(defense, vars(3:11), as.numeric)
+str(defense)
+offense <- mutate_at(offense, vars(3:12), as.numeric)
+str(offense)
+biography <- mutate_at(biography, vars("Weight"), as.numeric)
+str(biography)
+```
+
